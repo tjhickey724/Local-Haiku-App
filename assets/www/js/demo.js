@@ -53,6 +53,10 @@ $("#index").live("pageinit", function(event){
 	$("#composeLink").click(function(){
 		$.mobile.changePage( "#composePage", { transition: "slideup"} );
 	});
+	
+	$("#GPSdemoLink").click(function(){
+		$.mobile.changePage( "#GPSdemoPage", { transition: "slideup"} );
+	});
 
 
 });
@@ -88,7 +92,7 @@ $("#composePage").live("pageinit", function(event) {
 	    haikuObject.save({
 	      success: function(object) {
 			$("#status",page).html("success!");
-			$.mobile.changePage( "demo.html", {transition: "slideup"} );
+			$.mobile.changePage( "index.html", {transition: "slideup"} );
 	      },
 	      error: function(model, error) {
 			$("#status",page).html("error is "+error);
@@ -228,7 +232,7 @@ $("#loginPage").live("pageinit", function(event) {
 				$("#status",page).html("no one is logged in ... ");
 			    // show the signup or login page
 			}
-		    $.mobile.changePage( "demo.html", {transition: "slideup"} );
+		    $.mobile.changePage( "index.html", {transition: "slideup"} );
 		
 		  },
 		  error: function(user, error) {
@@ -237,8 +241,42 @@ $("#loginPage").live("pageinit", function(event) {
 		  }
 		});
 	});
-	
+});	
 
-	
+$("#GPSdemoPage").live("pageshow", function(event) {
+		var page = $("#GPSdemoPage");
+		$("#status",page).html("just hit the show button!");
 });
+	
+$("#GPSdemoPage").live("pageinit", function(event) {
+		var page = $("#GPSdemoPage");
+
+	var onSuccess = function(position) {
+		$("#status,page").html("accessing position data");
+	    var data =
+	  		  'Latitude: '          + position.coords.latitude          + '\n' +
+	          'Longitude: '         + position.coords.longitude         + '\n' +
+	          'Altitude: '          + position.coords.altitude          + '\n' +
+	          'Accuracy: '          + position.coords.accuracy          + '\n' +
+	          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
+	          'Heading: '           + position.coords.heading           + '\n' +
+	          'Speed: '             + position.coords.speed             + '\n' +
+	          'Timestamp: '         + position.timestamp                + '\n';
+
+		$("#status",page).html(data);
+		// alert(data);
+	};
+
+	function onError(error) {
+		$("#status",page).html(
+			  'code: '    + error.code    + '<br/>' +
+	          'message: ' + error.message + '<br/>');
+	};
+
+	$("#demoLink",page).live("click",function(e) {
+		$("#status",page).html("preparing for GPS data!");
+  	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+	});
+});
+	
 

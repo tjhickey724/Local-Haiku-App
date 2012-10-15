@@ -15,7 +15,7 @@ $("#index").live("pageshow", function(event){
 		$("#register",page).hide();
 		$("#logoutLink",page).show();
 		$("#composeLink",page).show();
-		$("#status",page).html("");
+
 
 	} else {
 		$("#user",page).html("no one is logged in");
@@ -23,8 +23,9 @@ $("#index").live("pageshow", function(event){
 		$("#composeLink",page).hide();
 		$("#login",page).show();
 		$("#register",page).show();
-		$("#status",page).html("");
+
 	}
+
 });
 		
 $("#index").live("pageinit", function(event){
@@ -57,8 +58,9 @@ $("#index").live("pageinit", function(event){
 		$.mobile.changePage( "#composePage", { transition: "slideup"} );
 	});
 	
-	$("#GPSdemoLink").click(function(){
-		$.mobile.changePage( "#GPSdemoPage", { transition: "slideup"} );
+	
+	$("#refreshLink",page).click(function(){
+		$.mobile.changePage( "#index", { allowSamePageTransition:true} );
 	});
 
 
@@ -124,6 +126,7 @@ $("#viewPage").live("pageinit", function(event){
 
 $("#viewPage").live("pageshow", function(event){
 	var page = $("#viewPage");
+	var optionsPage = $("#viewOptionsPage");
 	var currentUser = Parse.User.current();
 	
 	if (currentUser) {
@@ -136,9 +139,9 @@ $("#viewPage").live("pageshow", function(event){
 	$("#mylocation").html(" at ("
 			+localStorage.latitude+","+localStorage.longitude+")");
 	var haiku = Parse.Object.extend("Haiku");
-	var sstring = $("#searchfor",page).val();
-	var radius = Number($("#radius").val());
-	var resultnum = Number($("#resultnum").val());
+	var sstring = $("#searchfor",optionsPage).val();
+	var radius = Number($("#radius",optionsPage).val());
+	var resultnum = Number($("#resultnum",optionsPage).val());
 	var query = new Parse.Query(haiku);
 	var loc = new Parse.GeoPoint(Number(localStorage.latitude),Number(localStorage.longitude));
 	query.limit(resultnum);
@@ -160,21 +163,31 @@ $("#viewPage").live("pageshow", function(event){
 			var descr = poem.get("descr");
 			var poemtext = poem.get("poem");
 			var poemloc = poem.get("location");
+			var poemLatLon  = poemloc.latitude+","+poemloc.longitude;
+			var mapURL=
+				"http://maps.googleapis.com/maps/api/staticmap?center="
+				+ poemLatLon 
+				+"&zoom=15&size=200x200&sensor=false&markers="
+				+ poemLatLon;
 
-			
 			//var par  = poem.get("parent");
 			results = results + 
-			"\n<li>"
+			"\n<li data-theme='b'>"
 			+"<a href='#'>"
-			+"<h1 class='haikutitle'>"+title+"</h1>"
+			//+"<h1 class='haikutitle2'>"  //+title
+			+"<pre class='haiku2'>"+poemtext+"</pre>"
+			//+"</h1>"
+			+"<img class='haikuimg' src='"+mapURL+"'/>"
 
 		   // +"<div>"+ par +"</div>\n" 
 	
-			+" <pre class='haiku'>"+poemtext+"</pre>"
-			+"<p> ["+descr+"]"
-			+"("
-				+poemloc.latitude+","+poemloc.longitude+")"
-	        +"  "+ updatedAt +"</p>\n"
+
+			//+"<p>"+poemtext+"</br>"
+			
+			//+"<p> ["+descr+"]"
+			//+"("
+			//	+poemloc.latitude+","+poemloc.longitude+")"
+	        //+"  "+ updatedAt +"</p>\n"
 			+"</a></li>";
 			}
 			results = results+"\n </ul>";

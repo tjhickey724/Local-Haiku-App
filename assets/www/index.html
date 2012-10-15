@@ -27,19 +27,26 @@
 <div data-role="page" id="index">
 
 	<div data-role="header" data-position="fixed">
-		<h1 id="header">Local Haiku</h1>
+		<h1 id="header" style="display:none">Local Haiku</h1>
+		<div id="status"  style="display:none"></div>
+		<div id="user" style="display:none"></div>
 		<nav data-role="navbar">
 		<ul id="navlist" >  
-			<li><a href="#" id="viewLink" data-role="button">View </a></li>
-			<li><a href="#" id="composeLink" data-role="button">Compose </a></li>
+			<li><a href="#" id="refreshLink" 
+				data-role="button" data-icon="refresh"></a></li>
+			<li><a href="#" id="viewLink" 
+				data-role="button" data-icon="search"></a></li>
+			<li><a href="#" id="composeLink" 
+				data-role="button" data-icon="plus"></a></li>
 	    </ul>
 		</nav>
-		<div id="status"></div>
-		<div id="user">user</div>
+
 	</div>
 	
-	<div data-role="content">	
-
+	<div data-role="content" class="splash">
+	   <div id="main"></div>
+       <div class="splash">Local Haiku:
+	     Compose, Browse, Enjoy</div>
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<nav data-role="navbar">
@@ -54,19 +61,21 @@
 <div data-role="page" id="composePage">
 
 	<div data-role="header">
-		<h1>Local Haiku: Compose a Haiku</h1>
+		<h1>Compose a Haiku</h1>
+		<a href="#index" data-icon="home" data-iconpos="notext">Home</a>
 	</div>
 
 	<div data-role="content">
 		<div id="updateform">
 
 			<div>
+				<input type="submit" data-mini="true" id="publish" value="Publish"/>
 				<div data-role="fieldcontain">
 				    <label for="title">Title:</label>
-					<input type="text" id="title"/>
+					<input type="text" name="title" id="title"/>
 				</div>
 				<div data-role="fieldcontain">
-				    <label for="descr">Describe your location briefly</label>
+				    <label for="descr">Location:</label>
 					<input type="text" id="descr"/>
 				</div>
 				<div data-role="fieldcontain">
@@ -81,7 +90,7 @@
 				    <label for="poem">Write your Haiku (short, long, short)</label>
 					<textarea id="poem"></textarea>
 				</div>
-				<input type="submit" id="publish" value="Publish"/>
+
 				<div id="status"></div>
 			</div>
 		</div>	
@@ -91,26 +100,15 @@
 <div data-role="page" id="viewPage">
 
 	<div data-role="header" data-position="fixed">
-		<h1>Local Haiku <div id="mylocation"></div></h1>
-			<div data-role="fieldcontain">
-			    <label for="name">Search string:</label>
-			    <input type="text" id="searchfor" 
-					value="" />
-			</div>
-			<div data-role="fieldcontain">
-			    <label for="name">Search radius (miles):</label>
-			    <input type="text" id="radius"
-					value="10" />
-			</div>
-			<div data-role="fieldcontain">
-			    <label for="name">Number of results returned:</label>
-			    <input type="text" id="resultnum"
-					value="5" />
-			</div>
+		<h1>Local Haiku </h1>
+		
+		<a href="#viewOptionsPage" data-icon="grid" data-iconpos="notext">Options</a>
+		<a href="#index" data-icon="home" data-iconpos="notext">Home</a>
+		
 
 	</div>
 
-	<div data-role="content" >
+	<div data-role="content" id="viewcontent" >
 		<div data-type="horizontal" style="visibility:hidden">
 			<div id ="user">No user yet</div>
 			<div id="thetime">the time </div>
@@ -118,22 +116,51 @@
 		</div>
 		
 		
-
+          <article>
 			<ul id="poemList" data-role="listview" data-filter="false">
 			</ul>
-
+     	  </article>
 		
 	</div>
 	<div data-role="footer" data-position="fixed">
 		<nav data-role="navbar">
 		  <ul>
-			 <li><a href="#" id="update" data-role="button" data-icon="refresh">refresh </a> </li> 
-			 <li><a href="#index" data-role="button" data-icon="home">
-				home</a></li> 
+			 <li><a href="#" id="update" 
+				data-icon="refresh" data-iconpos="notext">refresh </a> </li> 
 		  </ul>
 	    </nav>
 	</div>
 </div>
+
+<div data-role="page" id ="viewOptionsPage">
+	<div data-role="header">
+		<h1>Select View Options</h1>
+	</div>
+	
+	<div data-role="content">
+	 <div>
+		<div>My current location: <div id="mylocation"></div></div>
+		<div data-role="fieldcontain">
+		    <label for="name">Search string:</label>
+		    <input type="text" id="searchfor" 
+				value="" />
+		</div>
+		<div data-role="fieldcontain">
+		    <label for="name">Search radius (miles):</label>
+		    <input type="text" id="radius"
+				value="10" />
+		</div>
+		<div data-role="fieldcontain">
+		    <label for="name">Number of results returned:</label>
+		    <input type="text" id="resultnum"
+				value="5" />
+		</div>
+	</div> 
+   </div><!-- content -->
+
+
+</div>
+	
 
 <div data-role="page" id="loginPage">
 

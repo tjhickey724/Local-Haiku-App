@@ -6,6 +6,8 @@
 	<title>Local Haiku</title> 
 	<link rel="stylesheet" 
 	    href= "http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+	<link rel="stylesheet" 
+		    href= "css/demo.css" />
 	<script type="text/javascript"
 	 src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   <script type="text/javascript"
@@ -24,22 +26,29 @@
 
 <div data-role="page" id="index">
 
-	<div data-role="header">
+	<div data-role="header" data-position="fixed">
 		<h1 id="header">Local Haiku</h1>
-	</div>
-	
-	<div data-role="content">	
-		<ul data-role="controlgroup" data-type="horizontal" data-inset="true">  
-		    <li><a id="register"   data-role="button">Register </a></li>
-		    <li><a id="login"      data-role="button">Login </a></li>
-			<li><a id="logoutLink" data-role="button">Logout </a></li>
-			<li><a id="viewLink" data-role="button">View </a></li>
-			<li><a id="composeLink" data-role="button">Compose </a></li>
-			<li><a id="GPSdemoLink" data-role="button">GPS Demo </a></li>
+		<nav data-role="navbar">
+		<ul id="navlist" >  
+			<li><a href="#" id="viewLink" data-role="button">View </a></li>
+			<li><a href="#" id="composeLink" data-role="button">Compose </a></li>
 	    </ul>
+		</nav>
 		<div id="status"></div>
 		<div id="user">user</div>
 	</div>
+	
+	<div data-role="content">	
+
+	</div>
+	<div data-role="footer" data-position="fixed">
+		<nav data-role="navbar">
+		<ul id="navlist" >  
+			<li><a href="#" id="login"      data-role="button">Login/Signup </a></li>
+			<li><a href="#" id="logoutLink" data-role="button">Logout </a></li>
+	    </ul>
+		</nav>
+		</div>
 </div>
 
 <div data-role="page" id="composePage">
@@ -50,7 +59,7 @@
 
 	<div data-role="content">
 		<div id="updateform">
-			<div id="status">...</div>
+
 			<div>
 				<div data-role="fieldcontain">
 				    <label for="title">Title:</label>
@@ -61,10 +70,19 @@
 					<input type="text" id="descr"/>
 				</div>
 				<div data-role="fieldcontain">
+				    <label for="lat">Latitude</label>
+					<input type="text" id="lat"/>
+				</div>
+				<div data-role="fieldcontain">
+				    <label for="lon">Longitude</label>
+					<input type="text" id="lon"/>
+				</div>
+				<div data-role="fieldcontain">
 				    <label for="poem">Write your Haiku (short, long, short)</label>
 					<textarea id="poem"></textarea>
 				</div>
 				<input type="submit" id="publish" value="Publish"/>
+				<div id="status"></div>
 			</div>
 		</div>	
 	</div>
@@ -72,46 +90,66 @@
 
 <div data-role="page" id="viewPage">
 
-	<div data-role="header">
-		<h1>Local Haiku</h1>
+	<div data-role="header" data-position="fixed">
+		<h1>Local Haiku <div id="mylocation"></div></h1>
+			<div data-role="fieldcontain">
+			    <label for="name">Search string:</label>
+			    <input type="text" id="searchfor" 
+					value="" />
+			</div>
+			<div data-role="fieldcontain">
+			    <label for="name">Search radius (miles):</label>
+			    <input type="text" id="radius"
+					value="10" />
+			</div>
+			<div data-role="fieldcontain">
+			    <label for="name">Number of results returned:</label>
+			    <input type="text" id="resultnum"
+					value="5" />
+			</div>
+
 	</div>
 
-	<div data-role="content">
-
-		<div data-type="horizontal">
+	<div data-role="content" >
+		<div data-type="horizontal" style="visibility:hidden">
 			<div id ="user">No user yet</div>
 			<div id="thetime">the time </div>
 			<div id="status"></div>
 		</div>
 		
-		<div data-role="controlgroup" data-type="horizontal">
-			<a id="update" data-role="button">refresh </a>  
-			<a id="composeLink" data-role="button">Compose</a> 
-			<a href="#index" data-role="button">back to index</a> 
-	    </div>	
-	
-		<div>
-			Search String:<input type="text" id="searchfor" value=""/>
-		</div>
-		<hr/>
-		<div id="poems">
-			<ul id="poemList" data-role="listview">
-			</ul>
-		</div>
 		
+
+			<ul id="poemList" data-role="listview" data-filter="false">
+			</ul>
+
+		
+	</div>
+	<div data-role="footer" data-position="fixed">
+		<nav data-role="navbar">
+		  <ul>
+			 <li><a href="#" id="update" data-role="button" data-icon="refresh">refresh </a> </li> 
+			 <li><a href="#index" data-role="button" data-icon="home">
+				home</a></li> 
+		  </ul>
+	    </nav>
 	</div>
 </div>
 
 <div data-role="page" id="loginPage">
 
 	<div data-role="header">
-		<h1>Register</h1>
+		<h1>Login</h1>
 	</div>
 
 	<div data-role="content">	
-		<div data-role="controlgroup">
-	    	<a id="loginLink" data-role="button">Login</a>  
-	    </div>    
+		<nav data-role="controlgroup" data-role="navbar">
+			<ul>
+	    		<li><a id="loginLink" data-role="button">Login</a> </li>
+		    	<li><a href="#registerpage" id="regLink" data-role="button">
+					Sign Up</a> </li>
+	
+			</ul> 
+	    </nav>    
 	    
 	    <div data-role="fieldcontain">	    
 	      <fieldset data-role="controlgroup">
@@ -181,19 +219,7 @@
 	</div>
 </div>
 
-<div data-role="page" id="GPSdemoPage">
 
-	<div data-role="header">
-		<h1 id="header">Local Haiku - GPS Demo</h1>
-	</div>
-	<div data-role="content">
-		<ul data-role="controlgroup" data-type="horizontal" data-inset="true">  
-		    <li><a id="demoLink"   data-role="button">Run Demo </a></li>
-		</ul>
-		<div id="status">status of GPS data ...</div>
-		<div id="user">user</div>
-	</div>
-</div>
 
 </body>
 </html>

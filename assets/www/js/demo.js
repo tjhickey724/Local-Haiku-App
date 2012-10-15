@@ -24,7 +24,6 @@ $("#index").live("pageshow", function(event){
 		$("#login",page).show();
 		$("#register",page).show();
 		$("#status",page).html("");
-
 	}
 });
 		
@@ -34,6 +33,10 @@ $("#index").live("pageinit", function(event){
 	
 	var page = $("#index");
 	var currentUser = Parse.User.current();
+	localStorage.latitude = 42.33;
+	localStorage.longitude = -71.12;
+	
+	navigator.geolocation.getCurrentPosition(storePosition);
 	
 	$("#register").click(function(){
 		$.mobile.changePage( "#registerpage", { transition: "slideup"} );
@@ -66,7 +69,9 @@ $("#index").live("pageinit", function(event){
 $("#composePage").live("pageshow", function(event) {
 	var currentUser = Parse.User.current();
 	var page = $("#composePage");
-		
+	navigator.geolocation.getCurrentPosition(storePosition);
+	$("#lat",page).val(localStorage.latitude);
+	$("#lon",page).val(localStorage.longitude);
 	if (currentUser) {
 		$("#user",page).html(currentUser.getUsername());
 	} else {
@@ -87,6 +92,10 @@ $("#composePage").live("pageinit", function(event) {
 		haikuObject.set("title",$("#title",page).val());
 		haikuObject.set("descr",$("#descr",page).val());
 		haikuObject.set("poem",$("#poem",page).val());
+		haikuObject.set("location",
+		    new Parse.GeoPoint(
+					 Number($("#lat",page).val()),
+		             Number($("#lon",page).val())))
 		haikuObject.set("parent",currentUser);
 		
 	    haikuObject.save({
@@ -124,18 +133,23 @@ $("#viewPage").live("pageshow", function(event){
 		$("#user",page).html("no one is logged in");
 		$("#composeLink",page).hide();
 	}
-	
+	$("#mylocation").html(" at ("
+			+localStorage.latitude+","+localStorage.longitude+")");
 	var haiku = Parse.Object.extend("Haiku");
 	var sstring = $("#searchfor",page).val();
+	var radius = Number($("#radius").val());
+	var resultnum = Number($("#resultnum").val());
 	var query = new Parse.Query(haiku);
-	query.limit(5);
-	query.descending("updatedAt");
+	var loc = new Parse.GeoPoint(Number(localStorage.latitude),Number(localStorage.longitude));
+	query.limit(resultnum);
+	query.ascending("location");
 	query.contains("poem",sstring);
+	query.withinMiles("location",loc,radius);
 	//query.equalTo("parent",currentUser);
 	query.find({
 		success: function(haikus){
 			var thetime = Date();
-			var results="";
+			var results=""; 
 			if (haikus.length==0) {
 				results="<li>No matching poems were found</li>";
 			}
@@ -144,18 +158,24 @@ $("#viewPage").live("pageshow", function(event){
 			var title = poem.get("title");
 			var updatedAt = poem.updatedAt;
 			var descr = poem.get("descr");
-			var poem = poem.get("poem");
+			var poemtext = poem.get("poem");
+			var poemloc = poem.get("location");
 
 			
 			//var par  = poem.get("parent");
 			results = results + 
 			"\n<li>"
-			+"<h1>"+title+"</h1>"
-			+"<div style='text-style:italic'>["+descr+"]</div>"
-	        +"<div>"+ updatedAt +"</div>\n" 
+			+"<a href='#'>"
+			+"<h1 class='haikutitle'>"+title+"</h1>"
+
 		   // +"<div>"+ par +"</div>\n" 
 	
-			+"<pre class='haiku'>"+poem+"</pre>";
+			+" <pre class='haiku'>"+poemtext+"</pre>"
+			+"<p> ["+descr+"]"
+			+"("
+				+poemloc.latitude+","+poemloc.longitude+")"
+	        +"  "+ updatedAt +"</p>\n"
+			+"</a></li>";
 			}
 			results = results+"\n </ul>";
 			$("#thetime",page).html(thetime);
@@ -280,3 +300,7 @@ $("#GPSdemoPage").live("pageinit", function(event) {
 });
 	
 
+function storePosition(position){
+	localStorage.latitude = position.coords.latitude;
+	localStorage.longitude = position.coords.longitude;
+}

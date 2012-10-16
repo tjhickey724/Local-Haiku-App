@@ -4,6 +4,13 @@
 // It is not a good idea though to put it into a public git repository
 // which is why I put it in a separate file hidden by .gitignore !!
 
+$( document ).bind( "mobileinit", function() {
+    // Make your jQuery Mobile framework configuration changes here!
+	// these should allow the mobile app to access the Parse.com server
+	$.support.cors = true;
+    $.mobile.allowCrossDomainPages = true;
+
+});
 
 $("#index").live("pageshow", function(event){
 	// this code is evaluated each time the page is shown!

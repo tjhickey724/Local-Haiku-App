@@ -172,7 +172,7 @@ $("#viewPage").live("pageshow", function(event){
 
 				results = results + 
 					"\n<li data-theme='b'>"
-					+"<a href='#poemView' poemid='"+ poem.id+ "'>"
+					+"<a href='#poemView?poemid="+ poem.id+ "'>"
 					+"<pre class='haiku2'>"+poemtext+"</pre>"
 					+"<img class='haikuimg' src='"+mapURL+"'/>"
 					+"</a></li>";
@@ -301,6 +301,17 @@ $("#GPSdemoPage").live("pageinit", function(event) {
 });
 	
 
+$("#poemView").live("pageshow", function(event) {
+	var page = $("#poemView");
+	var poemid = $(event.target).attr("data-url").replace(/.*poemid=/, "");
+    
+    $("#status",page).html("The poemid is "+poemid
+        +"<br/> We'll use it to create this page later!!");
+    // now that we have the poemid we can make a query and get all the info
+    // we need to present to the user in a nice way!
+});
+	
+	
 function storePosition(position){
 	localStorage.latitude = position.coords.latitude;
 	localStorage.longitude = position.coords.longitude;

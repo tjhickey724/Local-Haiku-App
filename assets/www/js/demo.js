@@ -157,39 +157,27 @@ $("#viewPage").live("pageshow", function(event){
 				results="<li>No matching poems were found</li>";
 			}
 			for (i =0; i<haikus.length; i++) {
-			poem = haikus[i];
-			var title = poem.get("title");
-			var updatedAt = poem.updatedAt;
-			var descr = poem.get("descr");
-			var poemtext = poem.get("poem");
-			var poemloc = poem.get("location");
-			var poemLatLon  = poemloc.latitude+","+poemloc.longitude;
-			var mapURL=
-				"http://maps.googleapis.com/maps/api/staticmap?center="
-				+ poemLatLon 
-				+"&zoom=15&size=200x200&sensor=false&markers="
-				+ poemLatLon;
+				poem = haikus[i];
+				var title = poem.get("title");
+				var updatedAt = poem.updatedAt;
+				var descr = poem.get("descr");
+				var poemtext = poem.get("poem");
+				var poemloc = poem.get("location");
+				var poemLatLon  = poemloc.latitude+","+poemloc.longitude;
+				var mapURL=
+					"http://maps.googleapis.com/maps/api/staticmap?center="
+					+ poemLatLon 
+					+"&zoom=15&size=200x200&sensor=false&markers="
+					+ poemLatLon;
 
-			//var par  = poem.get("parent");
-			results = results + 
-			"\n<li data-theme='b'>"
-			+"<a href='#'>"
-			//+"<h1 class='haikutitle2'>"  //+title
-			+"<pre class='haiku2'>"+poemtext+"</pre>"
-			//+"</h1>"
-			+"<img class='haikuimg' src='"+mapURL+"'/>"
-
-		   // +"<div>"+ par +"</div>\n" 
-	
-
-			//+"<p>"+poemtext+"</br>"
-			
-			//+"<p> ["+descr+"]"
-			//+"("
-			//	+poemloc.latitude+","+poemloc.longitude+")"
-	        //+"  "+ updatedAt +"</p>\n"
-			+"</a></li>";
+				results = results + 
+					"\n<li data-theme='b'>"
+					+"<a href='#poemView' poemid='"+ poem.id+ "'>"
+					+"<pre class='haiku2'>"+poemtext+"</pre>"
+					+"<img class='haikuimg' src='"+mapURL+"'/>"
+					+"</a></li>";
 			}
+			
 			results = results+"\n </ul>";
 			$("#thetime",page).html(thetime);
 			$("#poemList",page).html(results);

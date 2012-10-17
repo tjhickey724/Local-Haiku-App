@@ -3,6 +3,7 @@
 // you need to go to parse.com, create an account and copy that info here!!!
 // It is not a good idea though to put it into a public git repository
 // which is why I put it in a separate file hidden by .gitignore !!
+currentPoemID="none";
 
 $( document ).bind( "mobileinit", function() {
     // Make your jQuery Mobile framework configuration changes here!
@@ -127,6 +128,14 @@ $("#viewPage").live("pageinit", function(event){
 	$("#update",page).click(function(){
 		$.mobile.changePage( "#viewPage", { allowSamePageTransition:true} );
 	});
+	
+	$("a",page).live("click",function(e){
+		//alert("hello: '"+$(this).attr("poemid")+"'");
+		currentPoemID = $(this).attr("poemid");
+		$.mobile.changePage( "#poemView" );	
+		e.preventDefault();
+		//return nodeN!="P";
+	})
 });
 
 $("#viewPage").live("pageshow", function(event){
@@ -178,9 +187,11 @@ $("#viewPage").live("pageshow", function(event){
 				results = results + 
 					"\n<li data-theme='b'>"
 					+"<a href='#poemView' poemid='"+ poem.id+ "'>"
+					//+"<a href='#'>"
 					+"<pre class='haiku2'>"+poemtext+"</pre>"
 					+"<img class='haikuimg' src='"+mapURL+"'/>"
-					+"</a></li>";
+					+"</a>"
+					+"</li>";
 			}
 			// I think we need to create a listener which will grab the poemid
 			// from the a element and changePage to the poemView with an explicit
@@ -311,12 +322,61 @@ $("#GPSdemoPage").live("pageinit", function(event) {
 
 $("#poemView").live("pageshow", function(event) {
 	var page = $("#poemView");
-	var poemid = $(event.target).attr("data-url").replace(/.*poemid=/, "");
+	$("#thepoem",page).html("...");
+	$("#themap",page).html("...");
+	//var poemid = sessionStorage.currentPoemId;
+	var poemid = currentPoemID;
+	var haiku = Parse.Object.extend("Haiku");
+	var query = new Parse.Query(haiku);
+	query.get(poemid, {
+	  success: function(poem) {
+			var parent =poem.get("parent");
+			var userquery = new Parse.Query(Parse.User);
+			userquery.get(parent.id, {
+				  success: function(u) {
+				    username  = "user: "+u.getUsername();
+					var title = poem.get("title");
+					var updatedAt = poem.updatedAt;
+					var descr = poem.get("descr");
+					var poemtext = poem.get("poem");
+					var poemLoc = poem.get("location");
+					var poemLatLon;
+				  	if (! poemLoc) {poemLatLon="42.33,-71.11"} 
+					else poemLatLon = poemLoc.latitude+","+poemLoc.longitude;
+					var mapURL=
+						"http://maps.googleapis.com/maps/api/staticmap?center="
+						+ poemLatLon 
+						+"&zoom=15&size=300x300&sensor=false&markers="
+						+ poemLatLon;
+
+
+					result = 
+						"\n<div data-theme='b'>"
+						
+						+"<div> updated at: "+updatedAt +"</div>"
+						+"<div> Descr: "+descr +"</div>"
+						+"<div> LatLon: "+poemLatLon +"</div>"
+						+"<div> ID: "+ poem.id +"</div>"
+
+						
+						+"</div>";
+					 $("#themap",page).html("<img class='haikuimg' src='"+mapURL+"'/>")
+					 $("#thepoem",page).html("<pre class='haiku2'>"+poemtext+"</pre>")
+					 $("#title",page).html(title);
+					 $("#author",page).html(username);
+				     $("#theuser",page).html(result);	
+				  },
+				  error: function(u,error){
+					username = "error: "+ error;
+				}
+				});
+
+		},
+	  error: function(poem,error){
+		  alert("error: "+error);
+		}
+	});
     
-    $("#status",page).html("The poemid is "+poemid
-        +"<br/> We'll use it to create this page later!!<br/>"
-		+"the event target is "+JSON.stringify(event.target.nodename, null, 2)
-	);
     // now that we have the poemid we can make a query and get all the info
     // we need to present to the user in a nice way!
 });

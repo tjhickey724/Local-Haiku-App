@@ -46,24 +46,22 @@ $("#index").live("pageinit", function(event){
 	
 	navigator.geolocation.getCurrentPosition(storePosition);
 	
-	$("#register").click(function(){
-		$.mobile.changePage( "#registerpage", { transition: "slideup"} );
-	});
-	$("#login").click(function(){
-		$.mobile.changePage( "#loginPage", { transition: "slideup"} );
-	});
+
+	//$("#login").click(function(){
+	//	$.mobile.changePage( "#loginPage", { transition: "slideup"} );
+	//});
 	$("#logoutLink").click(function(){
 		Parse.User.logOut();
 		$("#status", page).html("you have successfully logged off");
 		$("#user",page).html("no one is logged in");
 		$.mobile.changePage("#index",{allowSamePageTransition:true});
 	});
-	$("#viewLink").click(function(){
-		$.mobile.changePage( "#viewPage", { transition: "slideup"} );
-	});
-	$("#composeLink").click(function(){
-		$.mobile.changePage( "#composePage", { transition: "slideup"} );
-	});
+	//$("#viewLink").click(function(){
+	//	$.mobile.changePage( "#viewPage", { transition: "slideup"} );
+	//});
+	//$("#composeLink").click(function(){
+	//	$.mobile.changePage( "#composePage", { transition: "slideup"} );
+	//});
 	
 	
 	$("#refreshLink",page).click(function(){
@@ -179,11 +177,14 @@ $("#viewPage").live("pageshow", function(event){
 
 				results = results + 
 					"\n<li data-theme='b'>"
-					+"<a href='#poemView?poemid="+ poem.id+ "'>"
+					+"<a href='#poemView' poemid='"+ poem.id+ "'>"
 					+"<pre class='haiku2'>"+poemtext+"</pre>"
 					+"<img class='haikuimg' src='"+mapURL+"'/>"
 					+"</a></li>";
 			}
+			// I think we need to create a listener which will grab the poemid
+			// from the a element and changePage to the poemView with an explicit
+			// data parameter consisting of the poemid...
 			
 			results = results+"\n </ul>";
 			$("#thetime",page).html(thetime);
@@ -313,7 +314,9 @@ $("#poemView").live("pageshow", function(event) {
 	var poemid = $(event.target).attr("data-url").replace(/.*poemid=/, "");
     
     $("#status",page).html("The poemid is "+poemid
-        +"<br/> We'll use it to create this page later!!");
+        +"<br/> We'll use it to create this page later!!<br/>"
+		+"the event target is "+JSON.stringify(event.target.nodename, null, 2)
+	);
     // now that we have the poemid we can make a query and get all the info
     // we need to present to the user in a nice way!
 });

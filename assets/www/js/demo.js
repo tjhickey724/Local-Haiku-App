@@ -132,6 +132,12 @@ $("#viewPage").live("pageinit", function(event){
 	$("a",page).live("click",function(e){
 		//alert("hello: '"+$(this).attr("poemid")+"'");
 		currentPoemID = $(this).attr("poemid");
+		 vpage = $("#poemView");
+		 $("#themap",vpage).html("")
+		 $("#thepoem",vpage).html("")
+		 $("#title",vpage).html("");
+		 $("#author",vpage).html("");
+	     $("#theuser",vpage).html("");
 		$.mobile.changePage( "#poemView" );	
 		e.preventDefault();
 		//return nodeN!="P";
@@ -253,7 +259,7 @@ $("#loginPage").live("pageinit", function(event) {
 		$("#status",page).html("The current user is "+currentUser.getUsername());
 	    // do stuff with the user
 	} else {
-		$("#status",page).html("no one is logged in ... ");
+		$("#status",page).html("");
 	    // show the signup or login page
 	}
 	
@@ -283,42 +289,27 @@ $("#loginPage").live("pageinit", function(event) {
 	});
 });	
 
-$("#GPSdemoPage").live("pageshow", function(event) {
-		var page = $("#GPSdemoPage");
-		$("#status",page).html("just hit the show button!");
-});
+
+$("#resetpwPage").live("pageinit", function(event) {
+	var page = $("#resetpwPage");
 	
-$("#GPSdemoPage").live("pageinit", function(event) {
-		var page = $("#GPSdemoPage");
+	$("#resetpw",page).live("click",function(e) {
+		alert("clicked the button!!");
+		$("#status",page).html("trying to reset password");
+		var email =  $("#email",page).val();
 
-	var onSuccess = function(position) {
-		$("#status,page").html("accessing position data");
-	    var data =
-	  		  'Latitude: '          + position.coords.latitude          + '\n' +
-	          'Longitude: '         + position.coords.longitude         + '\n' +
-	          'Altitude: '          + position.coords.altitude          + '\n' +
-	          'Accuracy: '          + position.coords.accuracy          + '\n' +
-	          'Altitude Accuracy: ' + position.coords.altitudeAccuracy  + '\n' +
-	          'Heading: '           + position.coords.heading           + '\n' +
-	          'Speed: '             + position.coords.speed             + '\n' +
-	          'Timestamp: '         + position.timestamp                + '\n';
-
-		$("#status",page).html(data);
-		// alert(data);
-	};
-
-	function onError(error) {
-		$("#status",page).html(
-			  'code: '    + error.code    + '<br/>' +
-	          'message: ' + error.message + '<br/>');
-	};
-
-	$("#demoLink",page).live("click",function(e) {
-		$("#status",page).html("preparing for GPS data!");
-  	navigator.geolocation.getCurrentPosition(onSuccess, onError);
+		Parse.User.requestPasswordReset(email, {
+	  		success: function() {
+	    		$("#status",page).html("A new password has been sent to '"+
+				email); 
+	  		},
+	  		error: function(error) {
+	    		// Show the error message somewhere
+				$("#status",page).html("Error: " + error.code + " " + error.message);
+	  		}
+		});
 	});
 });
-	
 
 $("#poemView").live("pageshow", function(event) {
 	var page = $("#poemView");

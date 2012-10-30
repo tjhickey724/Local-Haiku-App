@@ -138,7 +138,7 @@
 	<div data-role="header" data-position="fixed">
 		<h1>Local Haiku </h1>
 		
-		<a href="#viewOptionsPage" data-rel="dialog"
+		<a href="#viewOptionsPage" data-rel="dialog" data-transition="pop"
 			data-icon="grid" data-iconpos="notext">Options</a>
 		<a href="#index" data-icon="home" data-iconpos="notext">Home</a>
 		
@@ -203,18 +203,10 @@
 <div data-role="page" id="loginPage">
 
 	<div data-role="header">
-		<h1>Login</h1>
+		<h1>Login, Register, or Reset Password</h1>
 	</div>
 
 	<div data-role="content">	
-		<nav data-role="controlgroup" data-role="navbar">
-			<ul>
-	    		<li><a id="loginLink" data-role="button">Login</a> </li>
-		    	<li><a href="#registerpage" id="regLink" data-role="button">
-					Sign Up</a> </li>
-	
-			</ul> 
-	    </nav>    
 	    
 	    <div data-role="fieldcontain">	    
 	      <fieldset data-role="controlgroup">
@@ -228,14 +220,64 @@
                 <label for="password">
                     Your password:
                 </label>
-                <input type="password" id="password" placeholder=""/>
+                <input type="password" id="password" data-role="button" />
             </fieldset>
+
+
+			<div data-role="controlgroup" data-type="horizontal" data-role="navbar">
+				<ul  >
+					<li><a href="#" id="loginLink" data-role="button"/>Login</a></li>
+					
+			    	<li><a href="#registerpage" 
+							id="regLink" data-role="button">
+							Sign Up</a> </li>
+					<li><a href="#resetpwPage" 
+							id="resetpwLink"
+						 	data-role="button">
+							Forgot Password?</a> </li>
+
+
+				</ul> 
+		    </div>
+
+			
         </div>
 
+
 		<div id="status"></div>
+  
+		
 		
 	</div>
 </div>
+
+<div data-role="page" id="resetpwPage">
+
+	<div data-role="header">
+		<h1>Forgot Password?</h1>
+	</div>
+
+	<div data-role="content">
+		
+		  <fieldset data-role="controlgroup">
+              <label for="email">
+                 Enter your email:
+              </label>
+              <input type="text" id="email" placeholder=""/>
+          </fieldset>
+
+		<div  id="resetpw" data-role="button">
+				Reset password</div>
+
+       <div id="status">
+		This is the status div ....
+       </div>
+		
+		+ <div> Click <a href='#loginPage'>here</a> 
+		to login after you get the email and reset your pw</div>
+	</div>
+</div>
+
 
 <div data-role="page" id="registerpage">
 
